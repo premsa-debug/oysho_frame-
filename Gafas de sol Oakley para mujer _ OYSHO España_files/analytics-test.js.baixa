@@ -1,0 +1,148 @@
+    //---------------------------
+    //
+    //  analytics Module Code 0.0.3
+    //
+    //---------------------------
+    ORA.analyticsModule = function(){};
+
+    //Object to contain custom configs
+    ORA.analyticsModule.prototype.oraConfigObj = {
+  "i18n":false,
+  "s_disableSeed":false,
+  "alwaysLoad":true,
+  "ora-plugins":{
+    "tagMgr":{
+      "enable":true,
+      "tagManager":"Google Tag Manager"
+    }
+  },
+  "timezone":0,
+  "DNTBehavior":"honorDNT",
+  "s_dependencies":"common:running",
+  "disableSSL":false,
+  "defaultCollectionServer":"dc.oracleinfinity.io",
+  "s_useTrackingPipeline":true,
+  "libUrl":"//c.oracleinfinity.io/acs/account/6d1ff42253654da409c30902742658d3/js/tms/analytics-test/analytics.js",
+  "accountGuid":"6d1ff42253654da409c30902742658d3",
+  "tagId":"tms",
+  "secureCookie":true,
+  "FPCConfig":{
+    "name":"ORA_FPC",
+    "autoTLD":true,
+    "sessionOnly":false
+  },
+  "cookieTypes":"firstpartyonly",
+  "destinations":[
+    {
+      "accountGuid":"6d1ff42253654da409c30902742658d3"
+    }
+  ],
+  "s_TrackingPipelineTimeout":4000
+};
+
+    if (!(typeof ORA.analyticsModule.prototype.oraConfigObj.enabled && ORA.analyticsModule.prototype.oraConfigObj.enabled === false)){
+
+
+    ORA.analyticsModule.prototype.preinit = function() {
+        try {
+            ORA.Debug.debug("PREINIT: Executing Preinit script");
+            //preinit the tag
+            
+  
+        } catch(e) {
+            ORA.abortModuleHelper("analytics", e);
+        }
+    };
+
+    // run rules
+    ORA.analyticsModule.prototype.init = function() {
+        try {
+                         if(true) {
+                           //Rule - simple
+                                    this.oraConfigObj.key="value";
+                
+                                if (this.oraConfigObj.doLoad === undefined) {
+                 this.oraConfigObj.doLoad=true;
+                }
+           }
+                    // handle case where it matches none of the rules
+            this.oraConfigObj.doLoad = this.oraConfigObj.doLoad || this.oraConfigObj.alwaysLoad;
+
+                    } catch(e) {
+            ORA.abortModuleHelper("analytics", e);
+        }
+   };
+
+
+    // run any preload scripts
+    ORA.analyticsModule.prototype.preload = function() {
+        try {
+            // get the max conversion timeout from the products for click functionality
+            var currTimeout = 0;
+            if (ORA.analyticsModule.prototype.oraConfigObj["s_conversionTimeout"]) {
+                currTimeout = ORA.analyticsModule.prototype.oraConfigObj["s_conversionTimeout"];
+            }
+            ORA.setLoaderConversionTimeoutDefault(Math.max(currTimeout, ORA.loaderConversionTimeoutDefault()));
+            ORA.Debug.debug("PRELOAD:  Executing preload script");
+            
+
+        } catch(e) {
+            ORA.abortModuleHelper("analytics", e);
+        }
+    };
+
+
+    // load the analytics tag
+    ORA.analyticsModule.prototype.load = function(callback){
+        try {
+            ORA.Debug.debug("LOAD:  Executing load phase");
+            var productName="analytics";
+            var attachId="head";
+            //Load script
+            
+    var fail = function(){
+        ORA.fireEvent(new ORA.Event(productName+"_"+ORA.Event.LOADER_MODULE_ABORT, ORA.Event.STATUS_SUCCESS));
+    };
+    ORA.downloadLib(attachId, callback, fail, 0, true, this.oraConfigObj.libUrl);
+
+        } catch(e) {
+            ORA.abortModuleHelper("analytics", e);
+        }
+    };
+
+
+    ORA.analyticsModule.prototype.postload = function(){
+        ORA.Debug.debug("POSTLOAD:  Executing postload analytics complete");
+        try {
+            ORA.Debug.info("LOADER:  ORA.analyticsModule.prototype: postload");
+            //PostLoad script
+            
+        ORA.analytics.setup(ORA.analyticsModule.prototype.oraConfigObj);
+    
+        } catch(e) {
+            ORA.abortModuleHelper("analytics", e);
+        }
+    };
+
+
+    // abort gracefully on timer expire
+    ORA.analyticsModule.prototype.abort = function(){
+        try{
+            ORA.Debug.debug("ABORT:  Executing analyticsModule abort");
+            //Abort script
+            
+
+        } catch(e){
+            ORA.abortModuleHelper("analytics", e);
+        }
+    };
+    } else {
+            ORA.Debug.debug('analytics  module disabled - exiting module setup');
+
+        }
+
+    //  setup the product Name
+    ORA.analyticsModule.ProductName = "analytics";
+
+    // register plugin
+    ORA.registerPlugin(ORA.analyticsModule, "test");
